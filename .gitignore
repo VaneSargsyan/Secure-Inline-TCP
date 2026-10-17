@@ -1,0 +1,12 @@
+secrets/
+*.o
+device1_handshake
+device2_handshake
+dh_test
+tcp_client
+tcp_server
+test_hkdf
+test_hmac
+*.swp
+*.swo
+*~
