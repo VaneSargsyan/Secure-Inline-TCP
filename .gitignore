@@ -10,3 +10,7 @@ test_hmac
 *.swp
 *.swo
 *~
+/test_aes_gcm
+/test_nonce_manager
+/test_payload_crypto
+/test_psk

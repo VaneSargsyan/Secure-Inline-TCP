@@ -4,7 +4,9 @@
 #include <openssl/kdf.h>
 #include <openssl/hmac.h>
 #include <limits.h>
-
+#include <stdio.h>
+#include <string.h>
+#include <openssl/crypto.h>
 int derive_session_key(
     const unsigned char *shared_secret,
     size_t secret_len,
@@ -136,5 +138,53 @@ int derive_confirmation_key(
 
 cleanup:
     EVP_PKEY_CTX_free(ctx);
+    return success;
+}
+int load_psk(
+    const char *filename,
+    unsigned char psk[PSK_SIZE]
+) {
+    if (!filename || !psk) {
+        return 0;
+    }
+
+    FILE *file = fopen(filename, "r");
+
+    if (!file) {
+        return 0;
+    }
+
+    char hex[65] = {0};
+    char extra;
+    int success = 0;
+
+    if (fread(hex, 1, 64, file) != 64) {
+        goto cleanup;
+    }
+
+    if (fscanf(file, " %c", &extra) == 1) {
+        goto cleanup;
+    }
+
+    for (int i = 0; i < PSK_SIZE; i++) {
+        unsigned int value;
+
+        if (sscanf(hex + i * 2, "%2x", &value) != 1) {
+            goto cleanup;
+        }
+
+        psk[i] = (unsigned char)value;
+    }
+
+    success = 1;
+
+cleanup:
+    fclose(file);
+
+    if (!success) {
+        OPENSSL_cleanse(psk, PSK_SIZE);
+    }
+
+    OPENSSL_cleanse(hex, sizeof(hex));
     return success;
 }
