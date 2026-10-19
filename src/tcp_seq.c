@@ -165,3 +165,33 @@ TcpSegmentStatus tcp_segment_table_add(
 
     return TCP_SEGMENT_NEW;
 }
+TcpAckStatus tcp_translate_ack(
+    const TcpSegmentTable *table,
+    uint32_t encrypted_ack,
+    uint32_t *original_ack
+) {
+    if (table == NULL || original_ack == NULL ||
+        table->count > TCP_MAX_SEGMENTS) {
+        return TCP_ACK_UNMAPPED;
+    }
+
+    for (size_t i = 0; i < table->count; i++) {
+        const TcpSegmentMapping *segment = &table->segments[i];
+
+        uint32_t start = segment->translated_seq;
+        uint32_t end = tcp_segment_translated_end(segment);
+
+        if (encrypted_ack == end) {
+            *original_ack = tcp_segment_original_end(segment);
+            return TCP_ACK_MAPPED;
+        }
+
+        uint32_t distance = encrypted_ack - start;
+
+        if (distance > 0 && distance < segment->encrypted_length) {
+            return TCP_ACK_INSIDE_SEGMENT;
+        }
+    }
+
+    return TCP_ACK_UNMAPPED;
+}

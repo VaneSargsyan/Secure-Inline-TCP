@@ -74,4 +74,16 @@ TcpSegmentStatus tcp_segment_table_add(
     uint32_t encrypted_length,
     TcpSegmentMapping *result
 );
+
+typedef enum {
+    TCP_ACK_UNMAPPED = 0,
+    TCP_ACK_MAPPED = 1,
+    TCP_ACK_INSIDE_SEGMENT = -1
+} TcpAckStatus;
+
+TcpAckStatus tcp_translate_ack(
+    const TcpSegmentTable *table,
+    uint32_t encrypted_ack,
+    uint32_t *original_ack
+);
 #endif

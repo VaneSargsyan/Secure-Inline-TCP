@@ -153,6 +153,68 @@ assert(tcp_segment_table_add(
 
 assert(out_of_order.segments[0].translated_seq == 1100);
 assert(out_of_order.segments[1].translated_seq == 1000);
+TcpSegmentTable ack_table = {0};
+TcpSegmentMapping ack_segment;
+original_ack = 0;
+
+assert(tcp_segment_table_add(
+    &ack_table, 1000, 100, 128, &ack_segment
+) == TCP_SEGMENT_NEW);
+
+assert(tcp_translate_ack(
+    &ack_table, 1128, &original_ack
+) == TCP_ACK_MAPPED);
+
+assert(original_ack == 1100);
+
+assert(tcp_segment_table_add(
+    &ack_table, 1100, 100, 128, &ack_segment
+) == TCP_SEGMENT_NEW);
+
+assert(tcp_translate_ack(
+    &ack_table, 1256, &original_ack
+) == TCP_ACK_MAPPED);
+
+assert(original_ack == 1200);
+
+assert(tcp_translate_ack(
+    &ack_table, 1050, &original_ack
+) == TCP_ACK_INSIDE_SEGMENT);
+
+assert(tcp_translate_ack(
+    &ack_table, 5000, &original_ack
+) == TCP_ACK_UNMAPPED);
+
+assert(tcp_translate_ack(
+    &ack_table, 1000, &original_ack
+) == TCP_ACK_UNMAPPED);
+
+assert(tcp_translate_ack(
+    &ack_table, 1128, &original_ack
+) == TCP_ACK_MAPPED);
+
+assert(original_ack == 1100);
+
+assert(tcp_translate_ack(
+    NULL, 1128, &original_ack
+) == TCP_ACK_UNMAPPED);
+
+assert(tcp_translate_ack(
+    &ack_table, 1128, NULL
+) == TCP_ACK_UNMAPPED);
+
+TcpSegmentTable wrap_table = {0};
+TcpSegmentMapping wrap_segment;
+
+assert(tcp_segment_table_add(
+    &wrap_table, UINT32_MAX - 15, 20, 48, &wrap_segment
+) == TCP_SEGMENT_NEW);
+
+assert(tcp_translate_ack(
+    &wrap_table, 32, &original_ack
+) == TCP_ACK_MAPPED);
+
+assert(original_ack == 4);
   printf("All TCP sequence translation tests passed\n");
 
     return 0;
