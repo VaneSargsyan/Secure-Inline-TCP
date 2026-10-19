@@ -14,3 +14,8 @@ test_hmac
 /test_nonce_manager
 /test_payload_crypto
 /test_psk
+/packet_interceptor
+/packet_modifier
+/test_checksum
+/test_packet_parser
+/test_tcp_seq
