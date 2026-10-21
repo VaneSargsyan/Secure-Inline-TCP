@@ -29,3 +29,6 @@ test_hmac
 /secure_udp
 /udp_receiver
 /test_replay_protection
+/tun_listener
+/tun_udp_sender
+/tun_udp_receiver
