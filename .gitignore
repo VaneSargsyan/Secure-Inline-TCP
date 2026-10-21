@@ -20,3 +20,4 @@ test_hmac
 /test_packet_parser
 /test_tcp_seq
 /test_tcp_connection
+/test_packet_pipeline

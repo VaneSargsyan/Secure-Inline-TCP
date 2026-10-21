@@ -129,7 +129,13 @@ TcpSegmentStatus tcp_segment_table_add(
             return TCP_SEGMENT_OVERLAP;
         }
     }
+for (size_t i = 0; i < table->count; i++) {
+    const TcpSegmentMapping *existing = &table->segments[i];
 
+    if ((int32_t)(original_seq - existing->original_seq) < 0) {
+        return TCP_SEGMENT_ERROR;
+    }
+}
     if (table->count == TCP_MAX_SEGMENTS) {
         return TCP_SEGMENT_ERROR;
     }
