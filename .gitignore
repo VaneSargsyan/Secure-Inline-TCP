@@ -23,3 +23,6 @@ test_hmac
 /test_packet_pipeline
 /test_crypto_pipeline
 /test_encrypted_packet
+/test_tun_device
+/test_tun_reader
+/test_tun_crypto
