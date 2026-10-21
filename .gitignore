@@ -32,3 +32,6 @@ test_hmac
 /tun_listener
 /tun_udp_sender
 /tun_udp_receiver
+/test_tunnel_keys
+/device1_handshake
+/device2_handshake

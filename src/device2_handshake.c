@@ -11,7 +11,7 @@
 #include <openssl/err.h>
 #include <openssl/crypto.h>
 #include "crypto_utils.h"
-
+#include "tunnel_keys.h"
 #define KEY_SIZE 32
 #define PORT 6000
 
@@ -54,6 +54,8 @@ int main(void) {
     unsigned char shared_secret[KEY_SIZE] = {0};
     unsigned char salt[32] = {0};
     unsigned char session_key[SESSION_KEY_SIZE] = {0};
+unsigned char forward_key[TUNNEL_KEY_SIZE] = {0};
+unsigned char reverse_key[TUNNEL_KEY_SIZE] = {0};
     unsigned char confirmation_key[CONFIRM_KEY_SIZE] = {0};
     unsigned char psk[PSK_SIZE] = {0};
 
@@ -238,6 +240,13 @@ int main(void) {
     }
 
     printf("SUCCESS: Device1 key confirmation verified!\n");
+
+if (!derive_tunnel_keys(session_key, forward_key, reverse_key)) {
+    fprintf(stderr, "Device1: Tunnel key derivation failed!\n");
+    goto cleanup;
+}
+
+printf("Device2: Directional tunnel keys derived!\n");
     printf("Device2: Authenticated handshake completed!\n");
 
     success = 1;
@@ -251,6 +260,8 @@ cleanup:
     OPENSSL_cleanse(received_auth_hmac, sizeof(received_auth_hmac));
     OPENSSL_cleanse(confirmation_hmac, sizeof(confirmation_hmac));
     OPENSSL_cleanse(received_confirmation, sizeof(received_confirmation));
+OPENSSL_cleanse(forward_key, sizeof(forward_key));
+OPENSSL_cleanse(reverse_key, sizeof(reverse_key));
 
     EVP_PKEY_CTX_free(key_ctx);
     EVP_PKEY_CTX_free(derive_ctx);
