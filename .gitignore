@@ -36,3 +36,6 @@ test_hmac
 /device1_handshake
 /device2_handshake
 /test_tunnel_session
+/secure_tunnel
+/test_device_pipeline
+/test_handshake_integration
