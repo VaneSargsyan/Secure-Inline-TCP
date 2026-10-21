@@ -26,3 +26,5 @@ test_hmac
 /test_tun_device
 /test_tun_reader
 /test_tun_crypto
+/secure_udp
+/udp_receiver
