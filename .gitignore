@@ -35,3 +35,4 @@ test_hmac
 /test_tunnel_keys
 /device1_handshake
 /device2_handshake
+/test_tunnel_session
