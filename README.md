@@ -39,3 +39,27 @@ Start Device1:
     sudo ip netns exec device1 ./secure_tunnel 1
 
 Configure tunnel
+## Secure Bidirectional TUN Tunnel
+
+This project implements an authenticated, encrypted tunnel between two Linux devices.
+
+### Security Features
+- X25519 key exchange
+- PSK authentication with HMAC
+- HKDF key derivation
+- AES-256-GCM encryption
+- Replay protection
+- Bidirectional UDP/TUN communication
+
+### Network Topology
+PC1 -> Device1 -> Encrypted Tunnel -> Device2 -> PC2
+
+### Testing
+- Authenticated handshake: successful
+- Encrypted packet transmission: successful
+- Bidirectional communication: successful
+- ICMP ping: successful
+- TCP HTTP connection: successful
+
+### Limitations
+This is an educational prototype, not a production-ready VPN.
