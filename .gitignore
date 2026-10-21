@@ -28,3 +28,4 @@ test_hmac
 /test_tun_crypto
 /secure_udp
 /udp_receiver
+/test_replay_protection
